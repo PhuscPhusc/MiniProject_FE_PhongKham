@@ -1,0 +1,105 @@
+@page "/patient-history"
+
+@inject BenhNhanService benhNhanService;
+
+@inject NavigationManager navigationManager;
+
+
+@implements IDisposable
+
+
+
+<div class="d-flex flex-column flex-md-row">
+    <!-- Sidebar Patient (màn hình lớn) -->
+    <div class="text-white p-3 d-none d-md-block"
+         style="width:250px; min-height:100vh; background: linear-gradient(180deg, #007bff, #0056b3);">
+        <HeaderPatient />
+    </div>
+
+    <!-- Navbar Patient (màn hình nhỏ) -->
+    <div class="d-block d-md-none">
+        <NavbarPatient />
+    </div>
+
+    <!-- Nội dung chính: Lịch sử khám bệnh -->
+    <div class="flex-grow-1 p-4" style="background-color:#f8f9fa;">
+        <div class="container mt-5">
+            <h2 class="text-center mb-4 text-primary fw-bold">
+                📜 Lịch sử khám bệnh
+            </h2>
+            <EditForm Model="new ThongTinLichSuKhamBenhViewModel()" OnValidSubmit="HandleValidSearch"
+                      class="frm-search input-group mb-3">
+                <input type="text" class="form-control" placeholder="Search patient by id..." @bind="@id" />
+                <NavLink href=@($"/patient-history?id={id}") class="btn btn-warning" type="submit">Search</NavLink>
+            </EditForm>
+            <div class="card shadow-lg border-0">
+                <div class="card-body">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-primary text-center">
+                            <tr>
+                                <th scope="col">Id</th>
+                                <th scope="col">Họ tên</th>
+                                <th scope="col">Giới tính</th>
+                                <th scope="col">Ngày khám</th>
+                                <th scope="col">Triệu chứng</th>
+                                <th scope="col">Kết luận</th>
+                                <th scope="col">Ghi chú</th>
+                                <th scope="col">Bác sĩ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (ThongTinLichSuKhamBenhViewModel lichSuKham in benhNhanService._lichSuKhamBenh)
+                            {
+                                <tr>
+                                    <td class="text-center fw-bold">@lichSuKham.Id</td>
+                                    <td>@lichSuKham.HoTenBenhNhan</td>
+                                    <td>@lichSuKham.GioiTinh</td>
+                                    <td>@lichSuKham.NgayKham</td>
+                                    <td><span class="badge bg-warning text-dark">@lichSuKham.TrieuChung</span></td>
+                                    <td><span class="badge bg-danger">@lichSuKham.KetLuan</span></td>
+                                    <td>@lichSuKham.GhiChu</td>
+                                    <td>
+                                        <i class="bi bi-person-badge"></i> @lichSuKham.TenBacSi
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public int id { get; set; }
+
+    public async Task HandleValidSearch()
+    {
+        navigationManager.NavigateTo(@$"/patient-history?id={id}");
+    }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        // Gọi API ở đây nếu cần
+        // var data = await Http.GetFromJsonAsync<T>("/api/endpoint");
+
+        // Nếu có dùng state service:
+        benhNhanService.Onchange += StateHasChanged;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await benhNhanService.GetLichSuKhamBenh(id);
+    }
+
+    public void Dispose()
+    {
+        // Cleanup nếu cần
+        benhNhanService.Onchange -= StateHasChanged;
+    }
+}

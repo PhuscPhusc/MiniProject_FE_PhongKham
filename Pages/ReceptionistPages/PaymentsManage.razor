@@ -1,0 +1,107 @@
+@page "/reception-payments-manage"
+
+
+
+@inject LeTanService leTanService;
+
+@implements IDisposable
+
+
+
+<div class="d-flex flex-column flex-md-row">
+    <!-- Sidebar Reception (màn hình lớn) -->
+    <div class="text-white p-3 d-none d-md-block"
+         style="width:250px; min-height:100vh; background: linear-gradient(180deg, #007bff, #0056b3);">
+        <HeaderReception />
+    </div>
+
+    <!-- Navbar Reception (màn hình nhỏ) -->
+    <div class="d-block d-md-none">
+        <NavbarReception />
+    </div>
+
+    <!-- Nội dung chính: Quản lý người dùng -->
+    <div class="flex-grow-1 p-4" style="background-color:#f8f9fa;">
+        <div class="container mt-5">
+            <h2 class="text-center mb-4 text-primary fw-bold">👥 Quản lý thông tin thanh toán</h2>
+            <div class="card shadow-lg border-0">
+                <div class="card-body">
+                    <!-- Thanh tìm kiếm -->
+                    @* <EditForm Model="new PaymentSearchDTO()" OnValidSubmit="handlePaymentSearch"
+                              class="frm-search input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Search payment by patient name..."
+                               @bind="@paymentKeyword" />
+                        <NavLink href=@($"/reception-payments-search?keyword={paymentKeyword}") class="btn btn-success"
+                                 type="submit">
+                            Search
+                        </NavLink>
+                    </EditForm> *@
+
+                   
+                    <!-- Bảng danh sách người dùng -->
+                    <table class="table table-striped table-hover mt-2">
+                        <thead class="table-primary">
+                            <tr class="text-center">
+                                <th>ID</th>
+                                <th>Mã lần khám</th>
+                                <th>Tổng tiền</th>
+                                <th>Ngày thanh toán</th>
+                                <th>Trạng thái</th>
+                                <th>Mã sổ khám bệnh</th>
+                                <th>Họ tên bệnh nhân</th>
+                                <th>Giới tính</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var payment in leTanService._lstThongTinThanhToan)
+                            {
+                                <tr>
+                                    <td>@payment.Id</td>
+                                    <td>@payment.LanKhamId</td>
+                                    <td>@payment.TongTien.ToString("N0") VNĐ</td>
+                                    <td>@payment.NgayThanhToan.ToString("dd/MM/yyyy")</td>
+                                    <td>@payment.TrangThai</td>
+                                    <td>@payment.MaSoKhamBenh</td>
+                                    <td>@payment.HoTen</td>
+                                    <td>@payment.GioiTinh</td>
+                                    <td class="text-center">
+                                        <NavLink class="btn btn-outline-success btn-sm me-1"
+                                                 href=@($"/reception-payment-edit/{payment.Id}")>
+                                            <i class="bi bi-pencil-square"></i> Edit
+                                        </NavLink>
+                                        <button class="btn btn-outline-danger btn-sm">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        // Gọi API ở đây nếu cần
+        // var data = await Http.GetFromJsonAsync<T>("/api/endpoint");
+
+        // Nếu có dùng state service:
+        leTanService.Onchange += StateHasChanged;
+        await leTanService.GetThongTinThanhToan();
+    }
+
+    
+
+    public void Dispose()
+    {
+        // Cleanup nếu cần
+        leTanService.Onchange -= StateHasChanged;
+    }
+}

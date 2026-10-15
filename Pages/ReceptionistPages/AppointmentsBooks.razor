@@ -1,0 +1,112 @@
+@page "/reception-appointments-book"
+
+
+@inject LeTanService leTanService;
+
+@implements IDisposable
+
+
+
+
+
+<div class="d-flex flex-column flex-md-row">
+    <!-- Sidebar Reception (màn hình lớn) -->
+    <div class="text-white p-3 d-none d-md-block"
+         style="width:250px; min-height:100vh; background: linear-gradient(180deg, #007bff, #0056b3);">
+        <HeaderReception />
+    </div>
+
+    <!-- Navbar Reception (màn hình nhỏ) -->
+    <div class="d-block d-md-none">
+        <NavbarReception />
+    </div>
+
+    <!-- Nội dung chính: Đặt lịch khám -->
+    <div class="flex-grow-1 p-4" style="background-color:#f8f9fa;">
+        <div class="container mt-5">
+            <h2 class="text-center mb-4 text-primary fw-bold">📅 Đặt lịch khám</h2>
+            <div class="card shadow-lg border-0">
+                <div class="card-body">
+                    <EditForm Model="@phieuKhamMoi" OnValidSubmit="AddLichKhamMoi">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="text-danger" />
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Mã phiếu khám</label>
+                                <InputNumber class="form-control" @bind-Value="phieuKhamMoi.Id" />
+                                <ValidationMessage For="@(() => phieuKhamMoi.Id)" class="text-danger" />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Mã sổ khám bệnh</label>
+                                <InputNumber class="form-control" @bind-Value="phieuKhamMoi.SoKhamBenhId" />
+                                <ValidationMessage For="@(() => phieuKhamMoi.SoKhamBenhId)" class="text-danger" />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Mã bác sĩ</label>
+                                <InputNumber class="form-control" @bind-Value="phieuKhamMoi.BacSiId" />
+                                <ValidationMessage For="@(() => phieuKhamMoi.BacSiId)" class="text-danger" />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Ngày khám</label>
+                                <InputDate class="form-control" @bind-Value="phieuKhamMoi.NgayKham" />
+                                <ValidationMessage For="@(() => phieuKhamMoi.NgayKham)" class="text-danger" />
+                            </div>
+
+                            <div class="col-12 text-end">
+                                <button type="submit" class="btn btn-primary">Xác nhận tạo lịch khám</button>
+                            </div>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(thongBao))
+                        {
+                            <div class="alert alert-danger mt-3">
+                                @thongBao
+                            </div>
+                        }
+                    </EditForm>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+    private string thongBao = "";
+    private LeTanAddLichKhamViewModel phieuKhamMoi = new LeTanAddLichKhamViewModel();
+    private async Task AddLichKhamMoi()
+    {
+        var result = await leTanService.PostLichKham(phieuKhamMoi);
+        if(result.Success)
+        {
+            thongBao = result.Message;
+            phieuKhamMoi = new LeTanAddLichKhamViewModel();//reset form
+        }
+        else
+        {
+            thongBao = result.Message;
+        }
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        // Gọi API ở đây nếu cần
+        // var data = await Http.GetFromJsonAsync<T>("/api/endpoint");
+
+        // Nếu có dùng state service:
+        leTanService.Onchange += StateHasChanged;
+    }
+
+    
+
+    public void Dispose()
+    {
+        // Cleanup nếu cần
+        leTanService.Onchange -= StateHasChanged;
+    }
+}

@@ -1,0 +1,83 @@
+@page "/admin-xet-nghiem"
+
+@inject AdminService adminService;
+
+@implements IDisposable
+
+<div class="d-flex flex-column flex-md-row">
+    <!-- Sidebar (chỉ hiện khi màn hình lớn) -->
+    <div class="text-white p-3 d-none d-md-block"
+         style="width:250px; min-height:100vh; background: linear-gradient(180deg, #007bff, #0056b3); ">
+        <HeaderAdmin />
+    </div>
+
+    <!-- Navbar ngang (chỉ hiện khi màn hình nhỏ) -->
+    <div class="d-block d-md-none">
+        <NavbarAdmin />
+    </div>
+
+    <!-- Nội dung chính -->
+    <div class="flex-grow-1 p-4" style="background-color:#f8f9fa;">
+        <div class="container mt-3">
+            <h2 class="text-center mb-4 text-primary fw-bold">🧪 Danh mục xét nghiệm</h2>
+            <NavLink class="btn btn-success btn-sm mb-2" href="/add-new-xet-nghiem">Thêm Danh Mục Xét Nghiệm</NavLink>
+            <div class="card shadow-lg border-0">
+                <div class="card-body">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>ID</th>
+                                <th>Tên Danh Mục Xét Nghiệm</th>
+                                <th>Giá</th>
+                                <th>Mã Danh Mục Cha</th>
+                                <th>Chỉnh sửa</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (AdminDanhMucXetNghiemViewModel danhmucthuoc in adminService._lstDanhMucXetNghiem)
+                            {
+                                <tr>
+                                    <td>@danhmucthuoc.Id</td>
+                                    <td>@danhmucthuoc.TenDanhMuc</td>
+                                    <td>@danhmucthuoc.Gia]</td>
+                                    <td>@danhmucthuoc.MaDanhMucCha</td>
+                                    <td class="text-center">
+                                        <NavLink class="btn btn-outline-success btn-sm me-1" href=@($"/editDanhMucXetNghiem/{danhmucthuoc.Id}")">
+                                            <i class="bi bi-pencil-square"></i> Edit
+                                        </NavLink>
+                                        <button class="btn btn-outline-danger btn-sm">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        // Gọi API ở đây nếu cần
+        // var data = await Http.GetFromJsonAsync<T>("/api/endpoint");
+
+        // Nếu có dùng state service:
+        adminService.Onchange += StateHasChanged;
+
+        await adminService.GetDanhMucXetNghiem();
+    }
+
+    
+    public void Dispose()
+    {
+        // Cleanup nếu cần
+       adminService.Onchange -= StateHasChanged;
+    }
+}

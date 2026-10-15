@@ -1,0 +1,112 @@
+@page "/le-tan-edit/{id}"
+
+@inject LeTanService leTanService;
+
+@inject NavigationManager navigation;
+
+@implements IDisposable
+
+<div class="d-flex flex-column flex-md-row">
+    <!-- Sidebar (chỉ hiện khi màn hình lớn) -->
+    <div class="text-white p-3 d-none d-md-block"
+         style="width:250px; min-height:100vh; background: linear-gradient(180deg, #0279f8, #0056b3); ">
+        <HeaderReception />
+    </div>
+
+    <!-- Navbar ngang (chỉ hiện khi màn hình nhỏ) -->
+    <div class="d-block d-md-none">
+        <NavbarReception />
+    </div>
+
+    <!-- Nội dung chính: Edit User -->
+    <div class="flex-grow-1 p-4" style="background-color:#f8f9fa;">
+        <div class="container mt-5">
+            <h2 class="text-center mb-4 text-primary fw-bold">✏️ Cập nhật bệnh nhân</h2>
+            <div class="card shadow-lg border-0">
+                <div class="card-body">
+                    <EditForm Model="@updateBenhNhan" OnValidSubmit="hanldeUpdate">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+
+                        <div class="mb-3">
+                            <label class="form-label">Họ Tên</label>
+                            <InputText class="form-control" @bind-Value="updateBenhNhan.HoTen" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Ngày Sinh</label>
+                            <InputDate class="form-control" @bind-Value="updateBenhNhan.NgaySinh" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Giới Tính</label>
+                            <InputText class="form-control" @bind-Value="updateBenhNhan.GioiTinh" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Số điện thoại</label>
+                            <InputText class="form-control" @bind-Value="updateBenhNhan.SDT" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <InputText class="form-control" @bind-Value="updateBenhNhan.Email" />
+                        </div>
+
+                       
+
+                        <button type="submit" class="btn btn-primary">Xác Nhận Chỉnh Sửa bệnh nhân</button>
+                        <NavLink href="/reception-patients-search" class="btn btn-secondary ms-2">Hủy/Thoát</NavLink>
+
+                        @if (thongBao != "")
+                        {
+                            <div class="alert alert-danger">
+                                @thongBao
+                            </div>
+                        }
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@code {
+    [Parameter]
+    public string id { get; set; }
+    private string thongBao = "";
+    private LeTanUpdateBenhNhanViewModel updateBenhNhan = new LeTanUpdateBenhNhanViewModel();
+    public async Task hanldeUpdate()
+    {
+        var result = await leTanService.UpdateBenhNhan(Convert.ToInt32(id), updateBenhNhan);
+        thongBao = result ? "Cập nhật thành công" : "Cập nhật thất bại";
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Gọi API ở đây nếu cần
+        // var data = await Http.GetFromJsonAsync<T>("/api/endpoint");
+
+        // Nếu có dùng state service:
+        leTanService.Onchange += StateHasChanged;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (int.TryParse(id, out int benhNhanId))
+        {
+            updateBenhNhan = await leTanService.GetBenhNhanById(benhNhanId);
+        }
+    }
+
+
+
+    public void Dispose()
+    {
+        // Cleanup nếu cần
+        leTanService.Onchange -= StateHasChanged;
+    }
+}

@@ -1,0 +1,110 @@
+@page "/patient-profile"
+
+
+@inject BenhNhanService benhNhanService;
+
+@inject NavigationManager navigationManager;
+
+@implements IDisposable
+
+
+
+<div class="d-flex flex-column flex-md-row">
+    <!-- Sidebar (màn hình lớn) -->
+    <div class="text-white p-3 d-none d-md-block"
+         style="width:250px; min-height:100vh; background: linear-gradient(180deg, #007bff, #0056b3);">
+        <HeaderPatient />
+    </div>
+
+    <!-- Navbar (màn hình nhỏ) -->
+    <div class="d-block d-md-none">
+        <NavbarPatient />
+    </div>
+
+    <!-- Nội dung chính -->
+    <div class="flex-grow-1 p-4" style="background-color:#f8f9fa;">
+        <div class="container mt-3">
+            <h2 class="text-center mb-4 text-primary fw-bold">Thông tin bệnh nhân</h2>
+
+            <EditForm Model="new ThongTinBenhNhanTheoIdViewModel()" OnValidSubmit="HandleValidSearch"
+                      class="frm-search input-group mb-3">
+                <input type="text" class="form-control" placeholder="Search patient by id..."
+                       @bind="@id" />
+                <NavLink href=@($"/patient-profile?id={id}") class="btn btn-warning" type="submit">Search</NavLink>
+            </EditForm>
+
+            @if (@benhNhanService._thongTinBenhNhan == null)
+            {
+                <p>Đang tải dữ liệu...</p>
+            }
+            else
+            {
+                <div class="card shadow-lg border-0">
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <tr>
+                                <th>Id</th>
+                                <td>@benhNhanService._thongTinBenhNhan.Id</td>
+                            </tr>
+                            <tr>
+                                <th>Họ tên</th>
+                                <td>@benhNhanService._thongTinBenhNhan.HoTen</td>
+                            </tr>
+                            <tr>
+                                <th>Ngày sinh</th>
+                                <td>@benhNhanService._thongTinBenhNhan.NgaySinh.ToString("dd/MM/yyyy")</td>
+                            </tr>
+                            <tr>
+                                <th>Giới tính</th>
+                                <td>@benhNhanService._thongTinBenhNhan.GioiTinh</td>
+                            </tr>
+                            <tr>
+                                <th>SĐT</th>
+                                <td>@benhNhanService._thongTinBenhNhan.SDT</td>
+                            </tr>
+                            <tr>
+                                <th>Email</th>
+                                <td>@benhNhanService._thongTinBenhNhan.Email</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public int id { get; set; }
+
+    
+    public async Task HandleValidSearch()
+    {
+        navigationManager.NavigateTo($"/patient-profile?id={id}");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Gọi API ở đây nếu cần
+        // var data = await Http.GetFromJsonAsync<T>("/api/endpoint");
+
+        // Nếu có dùng state service:
+        benhNhanService.Onchange += StateHasChanged;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await benhNhanService.GetThongTinBenhNhanById(id);
+    }
+
+    
+    public void Dispose()
+    {
+        // Cleanup nếu cần
+        benhNhanService.Onchange -= StateHasChanged;
+    }
+}

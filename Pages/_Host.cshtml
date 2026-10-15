@@ -1,0 +1,74 @@
+@* Đây là thư viện web NetCore 10 - Sẵn có Components*@
+@page "/"
+@using Microsoft.AspNetCore.Components.Web
+@using fe_blazor_phongkham
+@*Namespace của file - Đây là tên Project của mình  -  _Host tạo ra từ folder Pages nên .Pages*@
+@namespace fe_blazor_phongKham.Pages 
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="~/" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
+    <link href="css/site.css" rel="stylesheet" /> @*Link đến file css*@
+
+
+    <link rel="icon" type="image/png" href="favicon.png" />
+    
+    <!--fa5-css-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+
+    <component type="typeof(HeadOutlet)" render-mode="Server" />
+    
+</head>
+
+<body>
+    @* Hầu hết không ai code trên _Host - _Host này chỉ dùng để load ra App - App chỉ định qua router => _Host không code gì hết*@
+
+
+    @* Code bằng C# *@
+    @* @{
+        string title = "XIN CHÀO LEE NGUYEEXN THIEEN PHUSC CODE BẰNG C#";
+    }
+    <h3>@title</h3> *@
+
+
+    @*code bằng html thông thường*@
+    @* <h1>Xin chào Lee Nguyeexn Thieen Phusc code bằng html thông thường</h1>  *@
+
+
+    @* Dòng này là load Component App *@
+    @* 
+        Trong _Host này qui định 1 thằng gốc là App - nghĩa là nguyên ứng dụng sẽ chứa trong App - Gọi là cơ chế SPA(Single Page Application) 
+        1 trang html duy nhất (chính) - Nội dung các trang khác(trang phụ). VD: index/contact/register -> dùng code để tạo ra thay vì dùng html tạo như trước => Gọi là cơ chế Component
+    *@
+    <component type="typeof(App)" render-mode="Server" /> @*App: tương tự như hàm main, giúp chọn file chạy đầu tiên của ứng dụng => Tạo App.razor ở thư mục ngoài*@
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+
+
+    <!--js blazor-->
+    <script src="_framework/blazor.server.js"></script><!--Dành cho xử lí ở Client - Tiếp thu sự kiện click từ người dùng-->
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>

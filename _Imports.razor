@@ -1,0 +1,32 @@
+@* 
+    Ghi chú - Đây là file import tất cả các thư viện sử dụng chung cho các file razor
+*@
+
+@* Đây là các thư viện mặc định(Có sẵn) phải import vào - Giúp cấu hình trang Web *@
+@using System.Net.Http
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Microsoft.AspNetCore.Components.Forms
+
+
+@* import Project của mình  - tạo file nào thì import namespace file đó vào*@
+@using fe_blazor_phongkham
+
+
+@* Namespace Components(mình tự tạo)*@
+@using fe_blazor_phongkham.Components @* Dùng để sử dụng được thanh navbar phần header *@
+@using fe_blazor_phongkham.Pages.AdminPages
+@using fe_blazor_phongkham.Components.HeaderAdmin
+@using fe_blazor_phongkham.Pages.ReceptionistPages
+@using fe_blazor_phongkham.Components.HeaderReceptionist
+@using fe_blazor_phongkham.Pages.DoctorPages
+@using fe_blazor_phongkham.Components.HeaderDoctor
+@using fe_blazor_phongkham.Components.HeaderPatient
+@using fe_blazor_phongkham.Pages.PatientPages
+
+
+
+

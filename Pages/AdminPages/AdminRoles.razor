@@ -1,0 +1,73 @@
+@page "/admin-roles"
+
+@inject AdminService adminService;
+
+@implements IDisposable
+
+
+<div class="d-flex flex-column flex-md-row">
+    <!-- Sidebar (chỉ hiện khi màn hình lớn) -->
+    <div class="text-white p-3 d-none d-md-block"
+         style="width:250px; min-height:100vh; background: linear-gradient(180deg, #007bff, #0056b3); ">
+        <HeaderAdmin />
+    </div>
+
+    <!-- Navbar ngang (chỉ hiện khi màn hình nhỏ) -->
+    <div class="d-block d-md-none">
+        <NavbarAdmin />
+    </div>
+
+    <!-- Nội dung chính: Quản lý role -->
+    <div class="flex-grow-1 p-4" style="background-color:#f8f9fa;">
+        <div class="container mt-5">
+            <h2 class="text-center mb-4 text-primary fw-bold">🔑 Quản lý role</h2>
+            <NavLink class="btn btn-success btn-sm mb-2" href="/add-new-role">Thêm Role</NavLink>
+            <div class="card shadow-lg border-0">
+                <div class="card-body">
+                    <!-- Bảng danh sách người dùng -->
+                    <table class="table table-striped table-hover">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>Id Quyền</th>
+                                <th>Tên Quyền</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (RoleViewModel role in adminService._lstRole)
+                            {
+                                <tr>
+                                    <td>@role.Id</td>
+                                    <td>@role.TenRole</td>
+                                    
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        // Gọi API ở đây nếu cần
+        // var data = await Http.GetFromJsonAsync<T>("/api/endpoint");
+
+        // Nếu có dùng state service:
+        adminService.Onchange += StateHasChanged;
+        await adminService.GetRole();
+    }
+
+    
+
+    public void Dispose()
+    {
+        // Cleanup nếu cần
+        adminService.Onchange -= StateHasChanged;
+    }
+}

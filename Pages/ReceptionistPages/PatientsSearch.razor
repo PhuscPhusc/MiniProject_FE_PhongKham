@@ -1,0 +1,113 @@
+@page "/reception-patients-search"
+
+@inject LeTanService leTanService;
+
+@inject NavigationManager navigationManager;
+
+@implements IDisposable;
+
+
+<div class="d-flex flex-column flex-md-row">
+    <!-- Sidebar (chỉ hiện khi màn hình lớn) -->
+    <div class="text-white p-3 d-none d-md-block"
+         style="width:250px; min-height:100vh; background: linear-gradient(180deg, #0279f8, #0056b3); ">
+        <HeaderReception />
+    </div>
+
+    <!-- Navbar ngang (chỉ hiện khi màn hình nhỏ) -->
+    <div class="d-block d-md-none">
+        <NavbarReception />
+    </div>
+
+    <!-- Nội dung chính: Quản lý người dùng -->
+    <div class="flex-grow-1 p-4" style="background-color:#f8f9fa;">
+        <div class="container mt-5">
+            <h2 class="text-center mb-4 text-primary fw-bold">👥 Quản lý thông tin bệnh nhân</h2>
+            <div class="card shadow-lg border-0">
+                <div class="card-body">
+                    <!-- Thanh tìm kiếm -->
+                    <EditForm Model="new AdminGetAllUserDTO()" OnValidSubmit="handleSearch"
+                              class="frm-search input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Search user by name..." @bind="@keyword" />
+                        <NavLink href=@(@$"/reception-patients-search?keyword={keyword}") class="btn btn-success" type="submit">Search
+                        </NavLink>
+                    </EditForm>
+                   
+                    <!-- Bảng danh sách người dùng -->
+                    <table class="table table-striped table-hover mt-2">
+                        <thead class="table-primary">
+                            <tr class="table-primary text-center">
+                                <th>ID</th>
+                                <th>Họ tên</th>
+                                <th>Ngày Sinh</th>
+                                <th>Giới Tính</th>
+                                <th>SDT</th>
+                                <th>Email</th>
+                                <th>Vai Trò</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (LeTanLayThongTinBenhNhanViewModel user in leTanService._lstBenhNhan)
+                            {
+                                <tr>
+                                    <td>@user.Id</td>
+                                    <td>@user.HoTen</td>
+                                    <td>@user.NgaySinh?.ToString("dd/MM/yyyy")</td>
+                                    <td>@user.GioiTinh</td>
+                                    <td>@user.SDT</td>
+                                    <td>@user.Email</td>
+                                    <td>@user.VaiTro</td>
+                                    <td class="text-center">
+                                        <NavLink class="btn btn-outline-success btn-sm me-1" href=@($"/le-tan-edit/{user.Id}")">
+                                            <i class="bi bi-pencil-square"></i> Edit
+                                        </NavLink>
+                                        <button class="btn btn-outline-danger btn-sm">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@code {
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string keyword { get; set; } = "";
+    
+    public async Task handleSearch()
+    {
+        navigationManager.NavigateTo(@$"/reception-patients-search?keyword={keyword}");
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        // Gọi API ở đây nếu cần
+        // var data = await Http.GetFromJsonAsync<T>("/api/endpoint");
+
+        // Nếu có dùng state service:
+        leTanService.Onchange += StateHasChanged;
+        await leTanService.GetAllBenhNhan();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await leTanService.GetBenhNhanByKeyword(keyword);
+    }
+
+    
+
+    public void Dispose()
+    {
+        // Cleanup nếu cần
+        leTanService.Onchange -= StateHasChanged;
+    }
+}

@@ -1,0 +1,116 @@
+@page "/reception-appointments"
+
+@inject LeTanService leTanService;
+
+@inject NavigationManager navigationManager;
+
+@implements IDisposable
+
+
+<div class="d-flex flex-column flex-md-row">
+    <!-- Sidebar Reception (màn hình lớn) -->
+    <div class="text-white p-3 d-none d-md-block"
+         style="width:250px; min-height:100vh; background: linear-gradient(180deg, #007bff, #0056b3);">
+        <HeaderReception />
+    </div>
+
+    <!-- Navbar Reception (màn hình nhỏ) -->
+    <div class="d-block d-md-none">
+        <NavbarReception />
+    </div>
+
+    <!-- Nội dung chính: Lịch hẹn hôm nay -->
+    <div class="flex-grow-1 p-4" style="background-color:#f8f9fa;">
+        <div class="container mt-5">
+            <h2 class="text-center mb-4 text-primary fw-bold">📌 Lịch hẹn </h2>
+            <div class="card shadow-lg border-0">
+                <div class="card-body">
+                    <!-- Thanh tìm kiếm -->
+                    <EditForm Model="new LeTanLayLichHenViewModel()"
+                              OnValidSubmit="@(async (EditContext _) => await handleSearch())"
+                              class="frm-search input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Search by patient id..."
+                               @bind="keywordAppointment" />
+                        <button type="submit" class="btn btn-success">Search</button>
+                    </EditForm>
+
+                    <!-- Bảng danh sách lịch hẹn -->
+                    <table class="table table-striped table-hover mt-2">
+                        <thead class="table-primary">
+                            <tr class="text-center">
+                                <th>ID</th>
+                                <th>Mã Sổ Khám Bệnh</th>
+                                <th>Mã Bác Sĩ</th>
+                                <th>Ngày Khám</th>
+                                <th>Mã Bệnh Nhân</th>
+                                <th>Họ Tên Bệnh Nhân</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var lichKham in leTanService._lstLichKham)
+                            {
+                                <tr>
+                                    <td>@lichKham.Id</td>
+                                    <td>@lichKham.MaSoKhamBenh</td>
+                                    <td>@lichKham.MaBacSi</td>
+                                    <td>@lichKham.NgayKham.ToString("dd/MM/yyyy")</td>
+                                    <td>@lichKham.MaBenhNhan</td>
+                                    <td>@lichKham.HoTenBenhNhan</td>
+                                    
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+@code {
+    private string keywordAppointment { get; set; } = "";
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string keyword { get; set; } = "";
+    
+    public async Task handleSearch()
+    {
+        navigationManager.NavigateTo($"/reception-appointments?keyword={keywordAppointment}");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Gọi API ở đây nếu cần
+        // var data = await Http.GetFromJsonAsync<T>("/api/endpoint");
+
+        // Nếu có dùng state service:
+        leTanService.Onchange += StateHasChanged;
+        await leTanService.GetLichKham();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (int.TryParse(keyword, out int lichKhamId))
+        {
+            var data = await leTanService.GetLichKhamByIdBenhNhan(lichKhamId);
+            leTanService._lstLichKham = data;
+        }
+        else
+        {
+            // Nếu không có keyword thì lấy toàn bộ
+            await leTanService.GetLichKham();
+        }
+    }
+
+
+    public void Dispose()
+    {
+        // Cleanup nếu cần
+        leTanService.Onchange -= StateHasChanged;
+    }
+}

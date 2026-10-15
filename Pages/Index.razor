@@ -1,0 +1,198 @@
+@page "/"
+@using Microsoft.AspNetCore.Components.Authorization
+
+@inject AuthenticationStateProvider _authStateProvider;
+
+@* <div class="container mt-5"> *@
+    
+<header class="text-center mb-4">
+    <h1 class="fw-bold text-primary">Hệ thống quản lý phòng khám</h1>
+</header>
+
+<!-- <nav class="nav justify-content-center mb-4">
+        <a class="nav-link active" href="/">Trang chủ</a>
+        <a class="nav-link" href="/login">Đăng nhập</a>
+        <a class="nav-link" href="/admin-home">Quản Trị Viên</a>
+        <a class="nav-link" href="/reception-patients-register">Lễ Tân</a>
+        <a class="nav-link" href="/doctor-patients-today">Bác Sĩ</a>
+        <a class="nav-link" href="/patient-profile">Bệnh Nhân</a>
+    </nav> -->
+<nav class="nav justify-content-center mb-4">
+    <!-- Luôn hiện -->
+    <a class="nav-link active" href="/">Trang chủ</a>
+
+    <AuthorizeView>
+        <Authorized>
+            <a class="nav-link" href="/" @onclick="Logout">Đăng xuất</a>
+
+            <!-- Admin -->
+            <AuthorizeView Roles="Quản Trị Viên" Context="adminContext">
+                <a class="nav-link" href="/admin-home">Quản Trị Viên</a>
+                <a class="nav-link" href="/reception-patients-register">Lễ Tân</a>
+                <a class="nav-link" href="/doctor-patients-today">Bác Sĩ</a>
+                <a class="nav-link" href="/patient-profile">Bệnh Nhân</a>
+            </AuthorizeView>
+
+            <!-- Lễ tân -->
+            <AuthorizeView Roles="Lễ Tân" Context="letanContext">
+                <a class="nav-link" href="/reception-patients-register">Lễ Tân</a>
+            </AuthorizeView>
+
+            <!-- Bác sĩ -->
+            <AuthorizeView Roles="Bác Sĩ" Context="bacsiContext">
+                <a class="nav-link" href="/doctor-patients-today">Bác Sĩ</a>
+            </AuthorizeView>
+
+            <!-- Bệnh nhân -->
+            <AuthorizeView Roles="Bệnh Nhân" Context="benhnhanContext">
+                <a class="nav-link" href="/patient-profile">Bệnh Nhân</a>
+            </AuthorizeView>
+        </Authorized>
+        <NotAuthorized>
+            <a class="nav-link" href="/login">Đăng nhập</a>
+        </NotAuthorized>
+    </AuthorizeView>
+
+</nav>
+<section class="text-center">
+    <p class="lead">Chào mừng bạn đến với hệ thống quản lý phòng khám Chikoko. Vui lòng chọn chức năng phù hợp để tiếp
+        tục.</p>
+    </section>
+
+    <section class="container mt-5">
+        <div class="row text-center">
+            <!-- Chuyên gia hàng đầu -->
+            <div class="col-md-3 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <img src="https://www.vinmec.com/static/uploads/09_12_2019_04_21_53_623122_JPG_5ada3e05c5.jpg"
+                         class="card-img-top" alt="Chuyên gia hàng đầu">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary fw-bold">Chuyên gia hàng đầu</h5>
+                        <p class="card-text">
+                            Đội ngũ bác sĩ, dược sĩ, điều dưỡng trình độ cao, tận tâm và chuyên nghiệp.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chất lượng quốc tế -->
+            <div class="col-md-3 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <img src="https://vinmec-prod.s3.amazonaws.com/images/20181130_035926_807835_38843-vinmec_retouc.max-1800x1800.jpg"
+                         class="card-img-top" alt="Chất lượng quốc tế">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary fw-bold">Chất lượng quốc tế</h5>
+                        <p class="card-text">
+                            Hệ thống đạt chứng chỉ JCI – tiêu chuẩn an toàn và chất lượng khắt khe nhất thế giới.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Công nghệ tiên tiến -->
+            <div class="col-md-3 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <img src="https://tse3.mm.bing.net/th/id/OIP.PGRtrgh3VYInGrYGETKyvwHaE8?rs=1&pid=ImgDetMain&o=7&rm=3"
+                         class="card-img-top" alt="Công nghệ tiên tiến">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary fw-bold">Công nghệ tiên tiến</h5>
+                        <p class="card-text">
+                            Cơ sở vật chất hạng nhất, dịch vụ 5 sao với công nghệ hiện đại.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nghiên cứu & Đổi mới -->
+            <div class="col-md-3 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <img src="https://tse3.mm.bing.net/th/id/OIP.YNLTAV3VwppcZ02bpemeqgHaE8?w=225&h=180&c=7&r=0&o=7&dpr=1.5&pid=1.7&rm=3"
+                         class="card-img-top" alt="Nghiên cứu & Đổi mới">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary fw-bold">Nghiên cứu & Đổi mới</h5>
+                        <p class="card-text">
+                            Hợp tác toàn cầu, cung cấp phương pháp điều trị sáng tạo theo chuẩn quốc tế.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container mt-5">
+        <h2 class="fw-bold text-primary text-center mb-4">Hệ thống phòng khám và trung tâm của chúng tôi</h2>
+        <div class="row align-items-center">
+            <!-- Hình ảnh bệnh viện -->
+            <div class="col-md-6 mb-4">
+                <img src="https://tse2.mm.bing.net/th/id/OIP.2sfA2jf5BNMT90g6YTtrmwHaE8?w=240&h=180&c=7&r=0&o=7&dpr=1.5&pid=1.7&rm=3" class="img-fluid rounded shadow" alt="Vinmec Ocean Park">
+            </div>
+
+            <!-- Nội dung mô tả -->
+            <div class="col-md-6 mb-4">
+                <p class="lead">
+                    Chikoko là Hệ thống Y tế tư nhân duy nhất tại Việt Nam hoạt động không vì mục tiêu lợi nhuận,
+                    có 2 bệnh viện đạt chứng chỉ tiêu chuẩn JCI – Tiêu chuẩn về an toàn người bệnh và chất lượng
+                    bệnh viện khắt khe nhất thế giới, cùng các chứng chỉ quốc tế trong từng lĩnh vực chuyên môn uy tín.
+                </p>
+                <a href="/about" class="btn btn-outline-primary mt-3">Xem thêm</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="container mt-5 text-center">
+        <h2 class="fw-bold text-primary mb-4">Đối tác của chúng tôi</h2>
+        <div class="d-flex justify-content-center flex-wrap gap-4">
+            <img src="images/ge.png" alt="GE HealthCare" height="60">
+            <img src="images/cleveland.png" alt="Cleveland Clinic" height="60">
+            <img src="images/roche.png" alt="Roche" height="60">
+        </div>
+    </section>
+
+    <footer class="bg-light mt-5 py-4">
+        <div class="container text-center">
+            <p class="mb-2">© 2026 Hệ thống quản lý phòng khám ABC</p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="#" class="text-decoration-none text-primary">Chính sách bảo mật</a>
+                <a href="#" class="text-decoration-none text-primary">Điều khoản sử dụng</a>
+            </div>
+        </div>
+    </footer>
+
+
+    <section class="container mt-5 text-center">
+        <h2 class="fw-bold text-primary mb-4">Chứng nhận và Giải thưởng</h2>
+        <div class="d-flex justify-content-center gap-4">
+            <img src="images/jci.png" alt="JCI" height="80">
+            <img src="images/aabb.png" alt="AABB" height="80">
+            <img src="images/rtac.png" alt="RTAC" height="80">
+        </div>
+    </section>
+
+    <section class="container mt-5 text-center">
+        <h2 class="fw-bold text-primary mb-4">Đối tác của chúng tôi</h2>
+        <div class="d-flex justify-content-center gap-4">
+            <img src="images/ge.png" alt="GE HealthCare" height="60">
+            <img src="images/cleveland.png" alt="Cleveland Clinic" height="60">
+            <img src="images/roche.png" alt="Roche" height="60">
+        </div>
+    </section>
+
+
+
+@* </div> *@
+
+@code
+{
+    //Đăng xuất thì gọi hàm MarkUserAsLoggedOut() của CustomAuthStateProvider để xóa token
+    private async Task Logout()
+    {
+        await (_authStateProvider as CustomAuthStateProvider).MarkUserAsLoggedOut();
+        //Logout xong thì điều hướng về trang chủ
+        navigationManager.NavigateTo("/");
+    }
+
+    //Tiêm NavigationManager
+    [Inject] NavigationManager navigationManager { get; set; }
+}
+
+

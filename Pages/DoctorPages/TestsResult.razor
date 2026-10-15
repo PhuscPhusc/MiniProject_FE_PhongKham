@@ -1,0 +1,109 @@
+@page "/doctor-tests-result"
+
+@inject BacSiService bacSiService;
+
+@inject NavigationManager navigationManager;
+
+
+
+@implements IDisposable
+
+
+<div class="d-flex flex-column flex-md-row">
+    <!-- Sidebar Doctor (màn hình lớn) -->
+    <div class="bg-primary text-white p-3 d-none d-md-block" style="width:250px; min-height:100vh;">
+        <HeaderDoctor />
+    </div>
+
+    <!-- Navbar Doctor (màn hình nhỏ) -->
+    <div class="d-block d-md-none">
+        <NavbarDoctor />
+    </div>
+
+    <!-- Nội dung chính: Kết quả xét nghiệm -->
+    <div class="flex-grow-1 p-4" style="background-color:#f8f9fa;">
+        <div class="container mt-5">
+            <h2 class="text-center mb-4 text-primary fw-bold">🧪 Kết quả xét nghiệm bệnh nhân</h2>
+
+            <EditForm Model="new ThongTinBenhNhanTheoMaBacSiViewModel()" OnValidSubmit="HandleValidSearch"
+                      class="frm-search input-group mb-3">
+                <input type="text" class="form-control" placeholder="Search by patient id..." @bind="@id" />
+                <NavLink href=@($"/doctor-tests-result?id={id}") class="btn btn-warning" type="submit">Search
+                </NavLink>
+            </EditForm>
+
+            <div class="card shadow-lg border-0">
+                <div class="card-body">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-primary text-center">
+                            <tr>
+                                <th>Mã lần khám</th>
+                                <th>Mã sổ khám</th>
+                                <th>Mã bệnh nhân</th>
+                                <th>Họ tên bệnh nhân</th>
+                                <th>Giới tính</th>
+                                <th>Ngày thực hiện</th>
+                                <th>Mã danh mục</th>
+                                <th>Tên danh mục xét nghiệm</th>
+                                <th>Giá tại thời điểm</th>
+                                <th>Kết quả</th>
+                                <th>Vai trò người dùng</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (ThongTinKetQuaXetNghiemBenhNhanFromBSViewModel item in bacSiService._lstKetQuaXetNghiemBenhNhan)
+                            {
+                                <tr>
+                                    <td class="fw-bold text-center">@item.Id</td>
+                                    <td>@item.MaSoKhamBenh</td>
+                                    <td>@item.MaBenhNhan</td>
+                                    <td>@item.HoTenBenhNhan</td>
+                                    <td>@item.GioiTinh</td>
+                                    <td>@item.NgayThucHien.ToString("dd/MM/yyyy")</td>
+                                    <td>@item.MaDanhMucXetNghiem</td>
+                                    <td>@item.TenDanhMucXetNghiem</td>
+                                    <td>@item.GiaTaiThoiDiem.ToString("N0") đ</td>
+                                    <td><span class="badge bg-info text-dark">@item.KetQua</span></td>
+                                    <td>@item.RoleNguoiDung</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public int id { get; set; }
+
+    public async Task HandleValidSearch()
+    {
+        navigationManager.NavigateTo($"/doctor-tests-result?id={id}");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Gọi API ở đây nếu cần
+        // var data = await Http.GetFromJsonAsync<T>("/api/endpoint");
+
+        // Nếu có dùng state service:
+        // StateService.OnChange += StateHasChanged;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await bacSiService.GetThongTinKetQuaXetNghiemBenhNhan(id);
+    }
+
+    public void Dispose()
+    {
+        // Cleanup nếu cần
+        // StateService.OnChange -= StateHasChanged;
+    }
+}

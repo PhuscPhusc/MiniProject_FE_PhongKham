@@ -1,0 +1,116 @@
+@page "/patient-payments"
+
+@inject BenhNhanService benhNhanService;
+
+
+@inject NavigationManager navigationManager;
+
+
+
+@implements IDisposable
+
+
+<div class="d-flex flex-column flex-md-row">
+    <!-- Sidebar Patient (màn hình lớn) -->
+    <div class="text-white p-3 d-none d-md-block"
+         style="width:250px; min-height:100vh; background: linear-gradient(180deg, #007bff, #0056b3);">
+        <HeaderPatient />
+    </div>
+
+    <!-- Navbar Patient (màn hình nhỏ) -->
+    <div class="d-block d-md-none">
+        <NavbarPatient />
+    </div>
+
+    <!-- Nội dung chính: Thanh toán & hóa đơn -->
+    <div class="flex-grow-1 p-4" style="background-color:#f8f9fa;">
+        <div class="container mt-5">
+            <h2 class="text-center mb-4 text-primary fw-bold">
+                💳 Thông tin thanh toán khám bệnh
+            </h2>
+
+            <EditForm Model="new ThongTinThanhToanBenhNhanViewModel()" OnValidSubmit="HandleValidSearch"
+                      class="frm-search input-group mb-3">
+                <input type="text" class="form-control" placeholder="Search by patient id..." @bind="@id" />
+                <NavLink href=@($"/patient-payments?id={id}") class="btn btn-warning" type="submit">Search</NavLink>
+            </EditForm>
+
+            <div class="card shadow-lg border-0">
+                <div class="card-body">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-primary text-center">
+                            <tr>
+                                <th scope="col">Id</th>
+                                <th scope="col">Mã lần khám</th>
+                                <th scope="col">Ngày khám</th>
+                                <th scope="col">Tổng tiền</th>
+                                <th scope="col">Ngày thanh toán</th>
+                                <th scope="col">Trạng thái</th>
+                                <th scope="col">Mã bệnh nhân</th>
+                                <th scope="col">Họ tên bệnh nhân</th>
+                                <th scope="col">Giới tính</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (ThongTinThanhToanBenhNhanViewModel item in benhNhanService._lstThanhToan)
+                            {
+                                <tr>
+                                    <td class="text-center fw-bold">@item.Id</td>
+                                    <td>@item.MaLanKham</td>
+                                    <td>@item.TongTien.ToString("N0") đ</td>
+                                    <td>@item.NgayThanhToan.ToString("dd/MM/yyyy")</td>
+                                    <td>
+                                        @if (item.TrangThai == "Chua Thanh Toan" || item.TrangThai == "chua thanh toan" || item.TrangThai == "chưa thanh toán" || item.TrangThai == "Chưa Thanh Toán" || item.TrangThai == "Chua thanh toan" || item.TrangThai == "Chưa thanh toán")
+                                        {
+                                            <span class="badge bg-danger">Chưa thanh toán</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-success">Đã thanh toán</span>
+                                        }
+                                    </td>
+                                    <td>@item.NgayKhamBenh.ToString("dd/MM/yyyy")</td>
+                                    <td>@item.MaBenhNhan</td>
+                                    <td>@item.HoTenBenhNhan</td>
+                                    <td>@item.GioiTinh</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@code {
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public int id { get; set; }
+    public async Task HandleValidSearch()
+    {
+        navigationManager.NavigateTo($"/patient-payments?id={id}");
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        // Gọi API ở đây nếu cần
+        // var data = await Http.GetFromJsonAsync<T>("/api/endpoint");
+
+        // Nếu có dùng state service:
+        benhNhanService.Onchange += StateHasChanged;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await benhNhanService.GetThongTinThanhToan(id);
+    }
+
+    public void Dispose()
+    {
+        // Cleanup nếu cần
+        benhNhanService.Onchange -= StateHasChanged;
+    }
+}

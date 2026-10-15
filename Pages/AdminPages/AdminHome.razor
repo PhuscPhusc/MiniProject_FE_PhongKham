@@ -1,0 +1,116 @@
+@page "/admin-home"
+@using Microsoft.AspNetCore.Components.Forms
+
+
+
+@inject NavigationManager navigationManager;
+
+@inject AdminService adminService;
+
+@implements IDisposable
+
+
+
+<div class="d-flex flex-column flex-md-row">
+    <!-- Sidebar (chỉ hiện khi màn hình lớn) -->
+    <div class="text-white p-3 d-none d-md-block"
+         style="width:250px; min-height:100vh; background: linear-gradient(180deg, #007bff, #0056b3); ">
+        <HeaderAdmin />
+    </div>
+
+    <!-- Navbar ngang (chỉ hiện khi màn hình nhỏ) -->
+    <div class="d-block d-md-none">
+        <NavbarAdmin />
+    </div>
+
+    <!-- Nội dung chính -->
+    <div class="flex-grow-1 p-4" style="background-color:#f8f9fa;">
+        <div class="container mt-3">
+            <h2 class="text-center mb-4 text-primary fw-bold">Thông tin Admin</h2>
+            <EditForm Model="new AdminDetailViewModel()" OnValidSubmit="handleSearch"
+                      class="frm-search input-group mb-3">
+                <!--Nếu bấm nút Enter thì chạy vào handleSearch(), Model ở đây không quan trọng , thêm vào để tránh báo lỗi vặt-->
+                <input type="text" class="form-control" placeholder="Search product by name..."
+                       @bind="@id" /><!--@bind là two way binding, thay đổi keyword là gì thì keyword dưới Navlink cũng thay đổi theo, bấm theo thẻ Navlink-->
+                <NavLink href=@(@$"/admin-home?id={id}") class="btn btn-warning" type="submit">Search
+                </NavLink>
+            </EditForm>
+            <div class="card shadow-lg border-0">
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <tr>
+                            <th>Id</th>
+                            <td>@adminService._adminDetailViewModel.Id</td>
+                        </tr>
+                        <tr>
+                            <th>Họ tên</th>
+                            <td>@adminService._adminDetailViewModel.HoTen</td>
+                        </tr>
+                        <tr>
+                            <th>Ngày sinh</th>
+                            <td>@adminService._adminDetailViewModel.NgaySinh?.ToString("dd/MM/yyyy")</td>
+
+                        </tr>
+                        <tr>
+                            <th>Giới tính</th>
+                            <td>@adminService._adminDetailViewModel.GioiTinh</td>
+                        </tr>
+                        <tr>
+                            <th>SĐT</th>
+                            <td>@adminService._adminDetailViewModel.SDT</td>
+                        </tr>
+                        <tr>
+                            <th>Email</th>
+                            <td>@adminService._adminDetailViewModel.Email</td>
+                        </tr>
+                        <tr>
+                            <th>Vai trò</th>
+                            <td>@adminService._adminDetailViewModel.VaiTro</td>
+                        </tr>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+@code {
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public int id { get; set; }
+    public async Task handleSearch()
+    {
+        
+        navigationManager.NavigateTo($"/admin-home?id={id}");
+        
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Gọi API ở đây nếu cần
+        // var data = await Http.GetFromJsonAsync<T>("/api/endpoint");
+
+        // Nếu có dùng state service:
+        adminService.Onchange += StateHasChanged;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+       
+        await adminService.GetAdminById(id);
+    }
+
+    public void Dispose()
+    {
+        // Cleanup nếu cần
+        adminService.Onchange -= StateHasChanged;
+    }
+}

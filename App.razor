@@ -1,0 +1,20 @@
+<CascadingAuthenticationState>
+
+    <Router AppAssembly="@typeof(App).Assembly">
+        <Found Context="routeData">
+
+            @* RoutView: nghĩa là khi / đến route nào thì nó sẽ dẫn đến route đó vd: "/" hoặc "/register"*@
+            <RouteView RouteData="@routeData">@*Tự Thêm DefaultLayout="typeof(HomePageMaster)" để nếu muốn dùng chung
+                layout của HomePageMaster cho toàn bộ trang thì không cần phải @layout HomePageMaster cho từng trang*@
+            </RouteView>
+
+
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+
+        </Found>
+        <NotFound>
+            <p>Không tìm thấy trang</p>
+        </NotFound>
+   
+    </Router>
+</CascadingAuthenticationState>

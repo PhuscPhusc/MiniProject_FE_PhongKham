@@ -1,0 +1,115 @@
+@page "/edit/{id}"
+
+@inject AdminService adminService;
+
+@inject NavigationManager navigation;
+
+@implements IDisposable
+
+<div class="d-flex flex-column flex-md-row">
+    <!-- Sidebar (chỉ hiện khi màn hình lớn) -->
+    <div class="text-white p-3 d-none d-md-block"
+         style="width:250px; min-height:100vh; background: linear-gradient(180deg, #0279f8, #0056b3); ">
+        <HeaderAdmin />
+    </div>
+
+    <!-- Navbar ngang (chỉ hiện khi màn hình nhỏ) -->
+    <div class="d-block d-md-none">
+        <NavbarAdmin />
+    </div>
+
+    <!-- Nội dung chính: Edit User -->
+    <div class="flex-grow-1 p-4" style="background-color:#f8f9fa;">
+        <div class="container mt-5">
+            <h2 class="text-center mb-4 text-primary fw-bold">✏️ Cập nhật người dùng</h2>
+            <div class="card shadow-lg border-0">
+                <div class="card-body">
+                    <EditForm Model="@updateUser" OnValidSubmit="hanldeUpdate">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+
+                        <div class="mb-3">
+                            <label class="form-label">Họ Tên</label>
+                            <InputText class="form-control" @bind-Value="updateUser.HoTen" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Ngày Sinh</label>
+                            <InputDate class="form-control" @bind-Value="updateUser.NgaySinh" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Giới Tính</label>
+                            <InputText class="form-control" @bind-Value="updateUser.GioiTinh" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Số điện thoại</label>
+                            <InputText class="form-control" @bind-Value="updateUser.SDT" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <InputText class="form-control" @bind-Value="updateUser.Email" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Mật Khẩu</label>
+                            <InputText class="form-control" @bind-Value="updateUser.MatKhauHash" />
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Xác Nhận Chỉnh Sửa Người Dùng</button>
+                        <NavLink href="/admin-user" class="btn btn-secondary ms-2">Hủy</NavLink>
+
+                        @if (thongBao != "")
+                        {
+                            <div class="alert alert-danger">
+                                @thongBao
+                            </div>
+                        }
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@code {
+    [Parameter]
+    public string id { get; set; }
+    private string thongBao = "";
+    private AdminUpdateUserViewModel updateUser = new AdminUpdateUserViewModel();
+    public async Task hanldeUpdate()
+    {
+        var result = await adminService.UpdateUser(Convert.ToInt32(id), updateUser);
+        thongBao = result ? "Cập nhật thành công" : "Cập nhật thất bại";
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Gọi API ở đây nếu cần
+        // var data = await Http.GetFromJsonAsync<T>("/api/endpoint");
+
+        // Nếu có dùng state service:
+        adminService.Onchange += StateHasChanged;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (int.TryParse(id, out int userId))
+        {
+            updateUser = await adminService.GetUserById(userId);
+        }
+    }
+
+
+
+    public void Dispose()
+    {
+        // Cleanup nếu cần
+        adminService.Onchange -= StateHasChanged;
+    }
+}

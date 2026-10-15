@@ -1,0 +1,69 @@
+@page "/doctor-history"
+<div class="d-flex flex-column flex-md-row">
+    <!-- Sidebar Doctor (chỉ hiện khi màn hình lớn) -->
+    <div class="bg-primary text-white p-3 d-none d-md-block" 
+         style="width:250px; min-height:100vh;">
+        <HeaderDoctor /> @* component Doctor sidebar *@
+    </div>
+
+    <!-- Navbar Doctor (chỉ hiện khi màn hình nhỏ) -->
+    <div class="d-block d-md-none">
+        <NavbarDoctor />
+    </div>
+
+    <!-- Nội dung chính -->
+    <div class="flex-grow-1 p-4" style="background-color:#f8f9fa;">
+        <div class="container mt-5">
+            <!-- Lịch sử khám bệnh -->
+            <h2 class="text-center mb-4 text-primary fw-bold">📜 Lịch sử khám bệnh</h2>
+            <div class="card shadow-lg border-0 mb-4">
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>Ngày</th>
+                                <th>Bệnh nhân</th>
+                                <th>Triệu chứng</th>
+                                <th>Kết luận</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>15/03/2026</td>
+                                <td>Nguyễn Văn A</td>
+                                <td>Sốt, ho</td>
+                                <td>Cảm cúm</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Form khám bệnh & ghi nhận -->
+            <h2 class="text-center mb-4 text-primary fw-bold">🩺 Khám bệnh & ghi nhận</h2>
+            <div class="card shadow-lg border-0">
+                <div class="card-body">
+                    <form class="row g-3">
+                        <div class="col-md-12">
+                            <label class="form-label">Triệu chứng</label>
+                            <textarea class="form-control" rows="3"></textarea>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Kết luận</label>
+                            <textarea class="form-control" rows="3"></textarea>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Ghi chú</label>
+                            <textarea class="form-control" rows="2"></textarea>
+                        </div>
+                        <div class="col-12 text-end">
+                            <button type="submit" class="btn btn-primary">
+                                Lưu kết quả khám
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

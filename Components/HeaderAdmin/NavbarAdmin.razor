@@ -1,0 +1,27 @@
+@* Navbar ngang dành cho màn hình nhỏ *@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+        <!-- Logo -->
+        <a class="navbar-brand fw-bold" href="/admin-home">⚡ Admin</a>
+
+
+        <!-- Toggle button -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Menu -->
+        <div class="collapse navbar-collapse" id="adminNavbar">
+            <ul class="navbar-nav ms-auto fw-bold">
+                <li class="nav-item"><NavLink class="nav-link" href="/admin-home">🏠 Trang Chủ</NavLink></li>
+                <li class="nav-item"><NavLink class="nav-link" href="/admin-user">👤 Người Dùng</NavLink></li>
+                <li class="nav-item"><NavLink class="nav-link" href="/admin-roles">🔑 Phân Quyền</NavLink></li>
+                <li class="nav-item"><NavLink class="nav-link" href="/admin-thuoc">💊 Thuốc</NavLink></li>
+                <li class="nav-item"><NavLink class="nav-link" href="/admin-bao-cao">📊 Báo Cáo</NavLink></li>
+                <li class="nav-item"><NavLink class="nav-link" href="/admin-xet-nghiem">🧪 Xét Nghiệm</NavLink></li>
+                <li class="nav-item"><NavLink class="nav-link" href="/admin-cau-hinh">⚙️ Cấu Hình</NavLink></li>
+                <li class="nav-item"><NavLink class="nav-link" href="/">🚪 Thoát</NavLink></li>
+            </ul>
+        </div>
+    </div>
+</nav>

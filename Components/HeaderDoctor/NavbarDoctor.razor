@@ -1,0 +1,22 @@
+@* Navbar ngang dành cho màn hình nhỏ *@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+        <!-- Logo -->
+        <a class="navbar-brand fw-bold" href="/doctor-patients-today">🩺 Doctor</a>
+
+        <!-- Toggle button -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#doctorNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Menu -->
+        <div class="collapse navbar-collapse" id="doctorNavbar">
+            <ul class="navbar-nav ms-auto fw-bold">
+                <li class="nav-item"><NavLink class="nav-link" href="/doctor-patients-today">👥 Thông tin lịch khám</NavLink></li>
+                <li class="nav-item"><NavLink class="nav-link" href="/doctor-tests-result">📑 Kết quả xét nghiệm</NavLink></li>
+                <li class="nav-item"><NavLink class="nav-link" href="/doctor-history">📜 Lịch sử khám bệnh</NavLink></li>
+                <li class="nav-item"><NavLink class="nav-link" href="/">🚪 Thoát</NavLink></li>
+            </ul>
+        </div>
+    </div>
+</nav>

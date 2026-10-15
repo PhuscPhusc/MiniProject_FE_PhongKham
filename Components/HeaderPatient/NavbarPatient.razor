@@ -1,0 +1,24 @@
+@* Navbar ngang dành cho màn hình nhỏ *@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+        <!-- Logo -->
+        <a class="navbar-brand fw-bold" href="/patient-profile">👤 Patient</a>
+
+        <!-- Toggle button -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#patientNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Menu -->
+        <div class="collapse navbar-collapse" id="patientNavbar">
+            <ul class="navbar-nav ms-auto fw-bold">
+                <li class="nav-item"><NavLink class="nav-link" href="/patient-profile">📄 Hồ sơ cá nhân</NavLink></li>
+                <li class="nav-item"><NavLink class="nav-link" href="/patient-history">📜 Lịch sử khám</NavLink></li>
+                <li class="nav-item"><NavLink class="nav-link" href="/patient-tests">🧪 Kết quả xét nghiệm</NavLink></li>
+                <li class="nav-item"><NavLink class="nav-link" href="/patient-appointments">📅 Lịch hẹn</NavLink></li>
+                <li class="nav-item"><NavLink class="nav-link" href="/patient-payments">💳 Thanh toán</NavLink></li>
+                <li class="nav-item"><NavLink class="nav-link" href="/">🚪 Thoát</NavLink></li>
+            </ul>
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,119 @@
+@page "/add-new-user"
+
+@inject AdminService adminService;
+
+@inject NavigationManager navigationManager;
+
+@implements IDisposable
+
+<div class="d-flex flex-column flex-md-row">
+    <!-- Sidebar (chỉ hiện khi màn hình lớn) -->
+    <div class="text-white p-3 d-none d-md-block"
+         style="width:250px; min-height:100vh; background: linear-gradient(180deg, #0279f8, #0056b3); ">
+        <HeaderAdmin />
+    </div>
+
+    <!-- Navbar ngang (chỉ hiện khi màn hình nhỏ) -->
+    <div class="d-block d-md-none">
+        <NavbarAdmin />
+    </div>
+
+    <!-- Nội dung chính: Edit User -->
+    <div class="flex-grow-1 p-4" style="background-color:#f8f9fa;">
+        <div class="container mt-5">
+            <h2 class="text-center mb-4 text-primary fw-bold">✏️ Chỉnh sửa người dùng</h2>
+            <div class="card shadow-lg border-0">
+                <div class="card-body">
+                    <EditForm Model="@nguoiDungMoi" OnValidSubmit="AddUser">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+
+                        <div class="mb-3">
+                            <label class="form-label">Id</label>
+                            <InputNumber class="form-control" @bind-Value="nguoiDungMoi.Id" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Họ Tên</label>
+                            <InputText class="form-control" @bind-Value="nguoiDungMoi.HoTen" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Ngày Sinh</label>
+                            <InputDate class="form-control" @bind-Value="nguoiDungMoi.NgaySinh" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Giới Tính</label>
+                            <InputText class="form-control" @bind-Value="nguoiDungMoi.GioiTinh" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Số điện thoại</label>
+                            <InputText class="form-control" @bind-Value="nguoiDungMoi.SDT" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <InputText class="form-control" @bind-Value="nguoiDungMoi.Email" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Mật Khẩu</label>
+                            <InputText class="form-control" @bind-Value="nguoiDungMoi.MatKhauHash" />
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Thêm Người Dùng</button>
+                        <NavLink href="/admin-user" class="btn btn-secondary ms-2">Hủy</NavLink>
+
+                        @if (thongBao != "")
+                        {
+                            <div class="alert alert-danger">
+                                @thongBao
+                            </div>
+                        }
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@code {
+    private string thongBao = "";
+    private AdminAddNguoiDungMoiViewModel nguoiDungMoi = new AdminAddNguoiDungMoiViewModel();
+    protected override async Task OnInitializedAsync()
+    {
+        // Gọi API ở đây nếu cần
+        // var data = await Http.GetFromJsonAsync<T>("/api/endpoint");
+
+        // Nếu có dùng state service:
+        adminService.Onchange += StateHasChanged;
+    }
+
+    private async Task AddUser()
+    {
+        var result = await adminService.PostUser(nguoiDungMoi);
+        if (result)
+        {
+            thongBao = "Thêm người dùng thành công";
+            nguoiDungMoi = new AdminAddNguoiDungMoiViewModel(); // reset form
+        }
+        else
+        {
+            thongBao = "Thêm người dùng thất bại";
+        }
+
+    }
+
+    
+    public void Dispose()
+    {
+        // Cleanup nếu cần
+        adminService.Onchange -= StateHasChanged;
+    }
+}

@@ -1,0 +1,6 @@
+@fe_blazor_phongkham_HostAddress = http://localhost:5084
+
+GET {{fe_blazor_phongkham_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

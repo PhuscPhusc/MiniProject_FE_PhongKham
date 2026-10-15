@@ -1,0 +1,31 @@
+@page "/patient-prescriptions"
+
+<div class="d-flex flex-column flex-md-row">
+    <!-- Sidebar Patient (màn hình lớn) -->
+    <div class="text-white p-3 d-none d-md-block" 
+         style="width:250px; min-height:100vh; background: linear-gradient(180deg, #007bff, #0056b3);">
+        <HeaderPatient />
+    </div>
+
+    <!-- Navbar Patient (màn hình nhỏ) -->
+    <div class="d-block d-md-none">
+        <NavbarPatient />
+    </div>
+
+    <!-- Nội dung chính: Đơn thuốc -->
+    <div class="flex-grow-1 p-4" style="background-color:#f8f9fa;">
+        <div class="container mt-5">
+            <h2 class="text-center mb-4 text-primary fw-bold">💊 Đơn thuốc</h2>
+            <div class="card shadow-lg border-0">
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            Paracetamol 500mg - 2 viên/ngày - 5 ngày
+                            <br /><small class="text-muted">Uống sau ăn, tránh rượu bia</small>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

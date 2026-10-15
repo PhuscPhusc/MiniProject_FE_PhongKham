@@ -1,0 +1,32 @@
+@page "/admin-bao-cao"
+
+
+<div class="d-flex flex-column flex-md-row">
+    <!-- Sidebar (chỉ hiện khi màn hình lớn) -->
+    <div class="text-white p-3 d-none d-md-block"
+         style="width:250px; min-height:100vh; background: linear-gradient(180deg, #007bff, #0056b3); ">
+        <HeaderAdmin />
+    </div>
+
+    <!-- Navbar ngang (chỉ hiện khi màn hình nhỏ) -->
+    <div class="d-block d-md-none">
+        <NavbarAdmin />
+    </div>
+
+    <!-- Nội dung chính: Báo cáo & thống kê -->
+    <div class="flex-grow-1 p-4" style="background-color:#f8f9fa;">
+        <div class="container mt-5">
+            <h2 class="text-center mb-4 text-primary fw-bold">📊 Báo cáo & thống kê (Tháng 3/2026)</h2>
+            <div class="card shadow-lg border-0">
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item">Tổng lượt khám: 120</li>
+                        <li class="list-group-item">Tổng xét nghiệm: 80</li>
+                        <li class="list-group-item">Tổng đơn thuốc: 95</li>
+                        <li class="list-group-item">Doanh thu: 150,000,000 VNĐ</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

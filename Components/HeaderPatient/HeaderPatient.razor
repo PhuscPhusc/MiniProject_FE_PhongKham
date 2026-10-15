@@ -1,0 +1,64 @@
+<!-- Sidebar Patient -->
+<div class="layout-sidebar">
+    <nav class="sidebar d-flex flex-column justify-content-between text-center" 
+         style="position:fixed; top:0; left:0; height:100vh; width:250px; 
+                background: linear-gradient(180deg, #007bff, #0056b3); position: fixed">
+        
+        <!-- Logo -->
+        <div>
+            <a class="navbar-brand d-block py-3 text-white fw-bold" href="/patient-profile" 
+               style="font-size: 1.5rem; letter-spacing:1px;">👤 Patient</a>
+            
+            <!-- Avatar -->
+            <img src="https://bt-component-netcore.cybersoft.edu.vn/assets/img/profile.jpg" 
+                 alt="img" class="w-75 mx-auto mb-3" 
+                 style="border-radius: 50%; box-shadow:0 0 20px rgba(0, 255, 255, 0.6);"/>
+            
+            <!-- Menu -->
+            <ul class="nav flex-column fw-bold">
+                <li class="nav-item">
+                    <NavLink class="nav-link py-2" ActiveClass="bg-info text-dark rounded" 
+                             href="/patient-profile" Match="NavLinkMatch.All" style="color:white;">
+                        📄 Thông tin cá nhân
+                    </NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link py-2" ActiveClass="bg-info text-dark rounded" 
+                             href="/patient-history" style="color:white;">
+                        📜 Lịch sử khám bệnh
+                    </NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link py-2" ActiveClass="bg-info text-dark rounded" 
+                             href="/patient-tests" style="color:white;">
+                        🧪 Kết quả xét nghiệm
+                    </NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link py-2" ActiveClass="bg-info text-dark rounded" 
+                             href="/patient-appointments" style="color:white;">
+                        📅 Lịch hẹn khám
+                    </NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link py-2" ActiveClass="bg-info text-dark rounded" 
+                             href="/patient-payments" style="color:white;">
+                        💳 Thanh toán & hóa đơn
+                    </NavLink>
+                </li>
+               
+                <li class="nav-item mt-3">
+                    <NavLink class="nav-link py-2" href="/" Match="NavLinkMatch.All" style="color:white;">
+                        🚪 Thoát
+                    </NavLink>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-white small mb-3">
+            © 2026 Patient System <br />
+            <span style="font-size:0.8rem;">Blazor UI</span>
+        </div>
+    </nav>
+</div>
